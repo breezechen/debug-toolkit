@@ -20,3 +20,4 @@ def wrapper():
 
 thread = threading.Thread(target=wrapper, daemon=True)
 thread.start()
+thread.join()

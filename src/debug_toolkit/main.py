@@ -96,9 +96,9 @@ def do_injection(pid, python_code, verbose):
             set trace-commands on
             set logging on
             set scheduler-locking off
-            call ((int (*)())PyGILState_Ensure)()
-            call ((int (*)(const char *))PyRun_SimpleString)("{python_code}")
-            call ((void (*) (int) )PyGILState_Release)($1)
+            call ((int (*)())PyPyGILState_Ensure)()
+            call ((int (*)(const char *))PyPyRun_SimpleString)("{python_code}")
+            call ((void (*) (int) )PyPyGILState_Release)($1)
             """
         ).encode()
     )
