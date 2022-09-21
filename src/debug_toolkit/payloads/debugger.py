@@ -20,7 +20,7 @@ def entrypoint(output_path: str):
         try:
             debugpy.listen(("0.0.0.0", LISTENING_PORT))
             setattr(debugpy, EXISTING_LISTENING_PORT, LISTENING_PORT)
-            return f"success"
+            return "success"
         except Exception as e:
             return f"Error attaching a debugger. Did you already attach a debugger? If so, ignore this message. Error={e.args[0]}"
 

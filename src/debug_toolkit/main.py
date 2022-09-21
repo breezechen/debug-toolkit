@@ -138,7 +138,7 @@ def do_trampoline_injection(pid, payload, verbose, timeout=120):
     if verbose:
         typer.secho("Done injecting", fg="green")
 
-    for i in range(timeout):
+    for _ in range(timeout):
         if os.path.exists(abs_done_path):
             break
         if verbose:
@@ -175,10 +175,11 @@ def inject_string(
     trampoline_timeout: int = 120,
     verbose: bool = False,
 ):
-    if not trampoline:
-        return do_injection(pid, payload, verbose)
-    else:
-        return do_trampoline_injection(pid, payload, verbose, trampoline_timeout)
+    return (
+        do_trampoline_injection(pid, payload, verbose, trampoline_timeout)
+        if trampoline
+        else do_injection(pid, payload, verbose)
+    )
 
 
 @app.command()
@@ -209,7 +210,11 @@ def memory(pid: int, seconds: int = 60, verbose: bool = False):
 @app.command()
 def stack_trace(pid: int, all_threads: bool = True, amount: int = 1, sleep_duration_s: int = 1, verbose: bool = False):
     if amount < 1 or sleep_duration_s < 0:
-        typer.secho(f"ERROR! amount must be greater than 1 and sleep must be greater than 0", fg="red")
+        typer.secho(
+            "ERROR! amount must be greater than 1 and sleep must be greater than 0",
+            fg="red",
+        )
+
         return
     payload = pkgutil.get_data(__package__, "payloads/stack_trace.py").decode()
     payload = payload.replace("ALL_THREADS_PLACEHOLDER", str(all_threads))
